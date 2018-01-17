@@ -147,8 +147,8 @@ static int ui_alloc(struct ui_st **stp)
 
 	return err;
 }
-
-
+//此函数将要输出的数据输出到标准错误上，从而在屏幕上显示，标准错误为：无缓冲输出，
+//不需要换行符，将要输出的内容立即输出，标准输出为：行缓冲，需要换行才能输出
 static int output_handler(const char *str)
 {
 	return print_handler(str, str_len(str), NULL);
