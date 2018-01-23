@@ -428,9 +428,13 @@ endif
 ifneq ($(USE_SPEEX_PP),)
 MODULES   += speex_pp
 endif
+
 ifneq ($(USE_STDIO),)
 MODULES   += stdio
 endif
+#*****add by songxiuhe
+MODULES   += local_socket
+
 ifneq ($(USE_SYSLOG),)
 MODULES   += syslog
 endif

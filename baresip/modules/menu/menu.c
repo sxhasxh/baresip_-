@@ -293,7 +293,7 @@ static int cmd_answer(struct re_printf *pf, void *unused)
 	int err;
 	(void)unused;
 
-	err = re_hprintf(pf, "%s: Answering incoming call\n", ua_aor(ua));
+	err = re_hprintf(pf, "ola_answering_call;%s;Answering incoming call\n", ua_aor(ua));
 
 	/* Stop any ongoing ring-tones停止任何持续不断的铃声 */
 	menu.play = mem_deref(menu.play);
@@ -948,7 +948,7 @@ static void ua_event_handler(struct ua *ua, enum ua_event ev,
 		/* set the current User-Agent to the one with the call */
 		uag_current_set(ua);
 
-		info("%s: Incoming call from: %s %s -"
+		info("ola_incoming_call;%s;Incoming call from;%s;%s;"
 		     " (press 'a' to accept)\n",
 		     ua_aor(ua), call_peername(call), call_peeruri(call));
 

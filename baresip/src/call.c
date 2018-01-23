@@ -361,7 +361,7 @@ static void print_summary(const struct call *call)
 	if (!dur)
 		return;
 
-	info("%s: Call with %s terminated (duration: %H)\n",
+	info("ola_hangup_call;%s;Call with;%s;terminated;duration: %H\n",
 	     call->local_uri, call->peer_uri, fmt_human_time, &dur);
 }
 
@@ -677,7 +677,7 @@ int call_connect(struct call *call, const struct pl *paddr)
 	if (!call || !paddr)
 		return EINVAL;
 
-	info("call: connecting to '%r'..\n", paddr);
+	info("ola_connecting_call;connecting to '%r'..\n", paddr);
 
 	call->outgoing = true;
 
@@ -746,7 +746,7 @@ int call_hangup(struct call *call, uint16_t scode, const char *reason)
 			scode = 486;
 			reason = "Rejected";
 		}
-		info("call: rejecting incoming call from %s (%u %s)\n",
+		info("ola_rejecting_call;rejecting incoming call from %s (%u %s)\n",
 		     call->peer_uri, scode, reason);
 		(void)sipsess_reject(call->sess, scode, reason, NULL);
 		break;
@@ -1291,7 +1291,7 @@ static void sipsess_close_handler(int err, const struct sip_msg *msg,
 	MAGIC_CHECK(call);
 
 	if (err) {
-		info("%s: session closed: %m\n", call->peer_uri, err);
+		info("ola_cancle_call;%s;session closed;%m\n", call->peer_uri, err);
 
 		if (call->not) {
 			(void)call_notify_sipfrag(call, 500, "%m", err);
@@ -1304,7 +1304,7 @@ static void sipsess_close_handler(int err, const struct sip_msg *msg,
 		(void)re_snprintf(reason, sizeof(reason), "%u %r",
 				  msg->scode, &msg->reason);
 
-		info("%s: session closed: %u %r\n",
+		info("ola_cancle_call;%s;session closed;%u %r\n",
 		     call->peer_uri, msg->scode, &msg->reason);
 
 		if (call->not) {
@@ -1313,7 +1313,7 @@ static void sipsess_close_handler(int err, const struct sip_msg *msg,
 		}
 	}
 	else {
-		info("%s: session closed\n", call->peer_uri);
+		info("ola_cancle_call;%s;session closed\n", call->peer_uri);
 	}
 
 	call_stream_stop(call);

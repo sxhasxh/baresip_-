@@ -340,7 +340,7 @@ static void call_event_handler(struct call *call, enum call_event ev,
 		break;
 
 	case CALL_EVENT_ESTABLISHED:
-		ua_printf(ua, "Call established: %s\n", peeruri);
+		ua_printf(ua, "ola_established_call;Call established;%s\n", peeruri);
 		ua_event(ua, UA_EVENT_CALL_ESTABLISHED, call, peeruri);
 		break;
 
