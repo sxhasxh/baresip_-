@@ -1,7 +1,8 @@
 /**
  * @file local_socket.c add by songxiuhe
- *
- * 
+ * 编写这个文件是为了：当baresip运行在deamon模式的时候不通过网络方式访问
+ * 而是使用local_socket的方式访问后台运行的server
+ * 即：为进程间通信编写的local_socket 
  */
 #include <string.h>
 #include <unistd.h>
@@ -9,18 +10,8 @@
 #include <termios.h>
 #include <re.h>
 #include <baresip.h>
-
-//#include <sys/types.h>  
-//#include <sys/socket.h>  
-//#include <stdio.h>  
+#include <stdio.h>  
 #include <sys/un.h>  
-//#include <unistd.h>  
-//#include <stdlib.h>  
-/**
- * 编写这个文件是为了：当baresip运行在deamon模式的时候不通过网络方式访问
- * 而是使用local_socket的方式访问后台运行的server
- * 即：为进程间通信编写的local_socket 
- */
 
 static int create_bind_and_listen (void); 
 static int setnonblocking(int sock) ; 
@@ -31,11 +22,9 @@ static int out_to_socket(const char * str);
 static int print_handler(const char *p, size_t size, void *arg);
 static int output_handler(const char *str);
 
-
-int server_sockfd;  
-int client_sockfd;  
-struct sockaddr_un client_address,server_address;    
-
+static int server_sockfd;  
+static int client_sockfd = -1;  
+static struct sockaddr_un client_address,server_address;    
 
 
 // 设置套接字为不阻塞  
@@ -212,9 +201,21 @@ static void report_cmd(char key)
 
 }
 
+static void log_local_handler(uint32_t level, const char *msg)
+{
+    (void)level;
+
+    output_handler(msg);
+
+}
+
 static struct ui ui_local_socket = {
     .name = "local_socket",
     .outputh = output_handler
+};
+
+static struct log lg = {
+    .h = log_local_handler
 };
 
 static int local_init(void)
@@ -223,12 +224,24 @@ static int local_init(void)
 
     ui_register(baresip_uis(), &ui_local_socket);
 
+    log_register_handler(&lg);
+
     return 0;
 }
 
 static int module_close(void)
 {
-    printf("close \n");
+    log_unregister_handler(&lg);
+
+    ui_unregister(&ui_local_socket);
+    //关闭server_sockfd和client_sockfd,如果他们存在的话
+    close(server_sockfd);
+
+    if(client_sockfd > 0)
+    {
+        close(client_sockfd);
+    }
+//    printf("close \n");
     return 0;
 }
 
