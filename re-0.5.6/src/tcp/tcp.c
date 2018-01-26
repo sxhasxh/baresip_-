@@ -541,7 +541,7 @@ static void tcp_conn_handler(int flags, void *arg)
 	}
 
 	tcp_sockopt_set(ts->fdc);
-
+//如果连接的connect handler不为空，则执行连接的处理函数
 	if (ts->connh)
 		ts->connh(&peer, ts->arg);
 }
@@ -635,7 +635,7 @@ int tcp_sock_alloc(struct tcp_sock **tsp, const struct sa *local,
 
 	if (-1 == ts->fd)
 		goto out;
-
+//将连接的处理函数和参数放入ts里面
 	ts->connh = ch;
 	ts->arg   = arg;
 
@@ -737,7 +737,7 @@ int tcp_sock_listen(struct tcp_sock *ts, int backlog)
 		DEBUG_WARNING("sock_listen: listen(): %m\n", err);
 		return err;
 	}
-
+//此处将TCP连接的socket加入epoll的监听队列，如果有新连接请求，则调用tcp_conn_handler
 	return fd_listen(ts->fd, FD_READ, tcp_conn_handler, ts);
 }
 

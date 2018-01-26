@@ -272,7 +272,7 @@ int conf_get_vidsz(const struct conf *conf, const char *name, struct vidsz *sz)
 	return 0;
 }
 
-
+//通过name来获取配置文件中name选项后面的配置信息，填写到sa中
 int conf_get_sa(const struct conf *conf, const char *name, struct sa *sa)
 {
 	struct pl opt;
@@ -284,7 +284,7 @@ int conf_get_sa(const struct conf *conf, const char *name, struct sa *sa)
 	err = conf_get(conf, name, &opt);
 	if (err)
 		return err;
-
+//设置地址和端口
 	return sa_decode(sa, opt.p, opt.l);
 }
 

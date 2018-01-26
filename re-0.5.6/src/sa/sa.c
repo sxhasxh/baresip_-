@@ -47,7 +47,7 @@ void sa_init(struct sa *sa, int af)
 int sa_set(struct sa *sa, const struct pl *addr, uint16_t port)
 {
 	char buf[64];
-
+//将addr里面的内容拷贝到buf里面
 	(void)pl_strcpy(addr, buf, sizeof(buf));
 	return sa_set_str(sa, buf, port);
 }

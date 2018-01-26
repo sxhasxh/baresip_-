@@ -239,7 +239,7 @@ static int cons_init(void)
 {
 	struct sa laddr;
 	int err;
-
+//配置好sa结构体里面的值：ip地址和端口，
 	if (conf_get_sa(conf_cur(), "cons_listen", &laddr)) {
 		sa_set_str(&laddr, "0.0.0.0", CONS_PORT);
 	}

@@ -26,6 +26,9 @@ enum sa_flag {
 struct sa {
 	union {
 		struct sockaddr sa;
+    //add by songxiuhe    
+//        struct sockaddr_un un;
+  //end  add
 		struct sockaddr_in in;
 #ifdef HAVE_INET6
 		struct sockaddr_in6 in6;
