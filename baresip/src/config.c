@@ -709,7 +709,10 @@ int config_write_template(const char *file, const struct config *cfg)
 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "cons" MOD_EXT "\n");
 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "evdev" MOD_EXT "\n");
 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "httpd" MOD_EXT "\n");
-
+    //***********add by songxiuhe **********
+	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "local_socket" MOD_EXT "\n");
+    //***********end add*******************
+    
 	(void)re_fprintf(f, "\n# Audio codec Modules (in order)\n");
 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "opus" MOD_EXT "\n");
 	(void)re_fprintf(f, "#module\t\t\t" MOD_PRE "silk" MOD_EXT "\n");

@@ -159,6 +159,9 @@ int main(int argc, char *argv[])
 	(void)argc;
 	(void)argv;
 #endif
+    //**************add by songxiuhe*********
+	conf_path_set("/data/.baresip");
+   //************end add***********
 
 	err = conf_configure();
 	if (err) {
