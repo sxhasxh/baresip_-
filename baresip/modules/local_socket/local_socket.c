@@ -18,14 +18,13 @@ static int setnonblocking(int sock) ;
 static void server_handler(int flags, void *arg);
 static void connect_handler(int flags, void *arg);
 static void report_cmd(char key);
-static int out_to_socket(const char * str);
 static int print_handler(const char *p, size_t size, void *arg);
 static int output_handler(const char *str);
 
 static int server_sockfd;  
 static int client_sockfd = -1;  
-static struct sockaddr_un client_address,server_address;    
-
+static struct sockaddr_un server_address;    
+static const char str_local_socket_name[]= "/data/ola_voip_local_socket";
 
 // 设置套接字为不阻塞  
 static int setnonblocking(int sfd)  
@@ -56,7 +55,7 @@ static int create_bind_and_listen (void)
     int temp;
     int sfd;
 
-    unlink ("/data/ola_voip_local_socket"); /*删除原有server_socket对象*/  
+    unlink (str_local_socket_name); /*删除原有server_socket对象*/  
 
     sfd = socket (AF_LOCAL, SOCK_STREAM, 0);  
     if(sfd == -1)
@@ -66,7 +65,7 @@ static int create_bind_and_listen (void)
     }
 
     server_address.sun_family = AF_LOCAL;  
-    strcpy (server_address.sun_path, "/data/ola_voip_local_socket");  
+    strcpy (server_address.sun_path, str_local_socket_name);  
     len = sizeof (struct sockaddr_un);  
     /*绑定 socket 对象*/  
     temp = bind (sfd, (struct sockaddr *)&server_address,len);  
@@ -135,18 +134,22 @@ static void connect_handler(int flags, void *arg)
 
     bytes = read (client_sockfd, &ch_recv, 1); 
     
-//  ch_recv[bytes] = '\0'; 
-//  *(ch_recv+bytes) = '\0'; 
-//  if(bytes > 0)
-//  { 
-//      printf("bytes:%d, %s \n",bytes,ch_recv);
-//  }
+//在socket中使用read返回值的含义与读普通文件有不同的含义。
+//
+//若对方结束了连接，则返回0；
+//在read的过程中，如果信号被中断，若已经读取了一部分数据，则返回已读取的字节数；
+//若没有读取，则返回-1，且error为EINTR。 
+//对于非阻塞socket而言，当接受缓冲区中有数据时，返回实际读取的数据长度；
+//当接收缓冲区中没有数据时，read函数不会阻塞而是会失败，
+//将errno 设置为EWOULDBLOCK或者EAGAIN，表示该操作本来应该是阻塞的，但是由于socket为非阻塞的socket，因此会立刻返回。
+//  
+// 
     if(bytes == 1)
     {
         report_cmd(ch_recv);
     }
 
-    if(bytes == 0){ close (client_sockfd); } 
+    if(bytes == 0){ close (client_sockfd); }//表示对方结束了连接，所以关闭socket 
 
     if(bytes == -1)
     {
@@ -155,24 +158,6 @@ static void connect_handler(int flags, void *arg)
 
  //   out_to_socket(ch_recv);
 
-}
-
-static int out_to_socket(const char * str)
-{
-    int s;
-    char end = 0x0a;
-//    printf("out_to_socket size is :%d \n",sizeof(str));
-
-   // s = write (client_sockfd, str, sizeof(str));  
-    s = write (client_sockfd, "123", 3);  
-    s = write (client_sockfd, &end,1 );  
-
-    if (s == -1)  
-    {  
-        perror ("write"); //出错则将客户端的连接关闭 
-        close(client_sockfd);
-    }  
-    return 0;
 }
 
 static int output_handler(const char *str)
@@ -185,7 +170,7 @@ static int print_handler(const char *p, size_t size, void *arg)
 {
     (void)arg;
 
-	 if(size != write(client_sockfd, p, size))
+	 if(size != (size_t)write(client_sockfd, p, size))
      {
         return ENOMEM;
      }

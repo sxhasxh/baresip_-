@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 	(void)argv;
 #endif
     //**************add by songxiuhe*********
-	conf_path_set("/data/.baresip");
+	conf_path_set("/data/baresip");
    //************end add***********
 
 	err = conf_configure();
@@ -239,6 +239,7 @@ int main(int argc, char *argv[])
 	for (i=0; i<execmdc; i++) {
 		ui_input_str(execmdv[i]);
 	}
+
 	/* Main loop */
 	err = re_main(signal_handler);
 

@@ -432,8 +432,10 @@ endif
 ifneq ($(USE_STDIO),)
 MODULES   += stdio
 endif
-#*****add by songxiuhe
+
+#*******add by songxiuhe
 MODULES   += local_socket
+#*******end add
 
 ifneq ($(USE_SYSLOG),)
 MODULES   += syslog

@@ -85,7 +85,8 @@ static void ui_fd_handler(int flags, void *arg)
 	if (1 != read(STDIN_FILENO, &key, 1)) {
 		return;
 	}
-    tmr_start(&st->tmr, RELEASE_VAL, timeout, st);
+
+	tmr_start(&st->tmr, RELEASE_VAL, timeout, st);
 	report_key(st, key);
 }
 
@@ -130,7 +131,7 @@ static int ui_alloc(struct ui_st **stp)
 	tmr_init(&st->tmr);//初始化tmr结构体
 //将标准输入加入监听队列,当EPOOL检查到描述符可用时，就会调用ui_fd_handler,
 	err = fd_listen(STDIN_FILENO, FD_READ, ui_fd_handler, st);
-    if (err)
+	if (err)
 		goto out;
 
 	err = term_setup(st);//设置标准输入的属性
