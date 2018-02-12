@@ -149,7 +149,7 @@ static int ua_print_reg_status(struct re_printf *pf, void *unused)
 	for (le = list_head(uag_list()); le && !err; le = le->next) {
 		const struct ua *ua = le->data;
 
-		err  = re_hprintf(pf, "%s ", ua == uag_cur() ? ">" : " ");
+		err  = re_hprintf(pf,"%s;ola_registstate;", ua == uag_cur() ? ">" : " ");
 		err |= ua_print_status(pf, ua);
 	}
 
@@ -437,6 +437,13 @@ static int about_box(struct re_printf *pf, void *unused)
 	return re_hprintf(pf, about_fmt, BARESIP_VERSION);
 }
 
+static int net_change_used(struct re_printf *pf, void *unused)
+{   
+    (void)unused;
+	(void)re_hprintf(pf, "ola IP-Address changed,now re_regist account\n");
+    (void)uag_reset_transp(true, true);
+    return 0;
+}
 
 static const struct cmd cmdv[] = {
 
@@ -454,6 +461,7 @@ static const struct cmd cmdv[] = {
 {"ausrc",     0,   CMD_IPRM, "Switch audio source",     switch_audio_source  },
 {"auplay",    0,   CMD_IPRM, "Switch audio player",     switch_audio_player  },
 {"about",     0,          0, "About box",               about_box            },
+{"net_chg",   'g',        0, "used when net_change",    net_change_used      },
 
 };
 

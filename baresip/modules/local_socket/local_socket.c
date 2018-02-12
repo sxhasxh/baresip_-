@@ -149,11 +149,20 @@ static void connect_handler(int flags, void *arg)
         report_cmd(ch_recv);
     }
 
-    if(bytes == 0){ close (client_sockfd); }//表示对方结束了连接，所以关闭socket 
+    if(bytes == 0)
+    {
+        close (client_sockfd);
+        fd_close(client_sockfd);
+    }//表示对方结束了连接，所以关闭socket 
 
     if(bytes == -1)
     {
-        if(errno != EAGAIN) perror("read");
+        if(errno != EAGAIN) 
+        {
+            perror("read");
+            close (client_sockfd);
+            fd_close(client_sockfd);
+        }
     }
 
  //   out_to_socket(ch_recv);

@@ -752,7 +752,7 @@ int call_hangup(struct call *call, uint16_t scode, const char *reason)
 		break;
 
 	default:
-		info("call: terminate call '%s' with %s\n",
+		info("ola_terminate_call;terminate call;%s;with;%s\n",
 		     sip_dialog_callid(sipsess_dialog(call->sess)),
 		     call->peer_uri);
 

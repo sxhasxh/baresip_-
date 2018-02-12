@@ -524,9 +524,16 @@ static int core_config_template(struct re_printf *pf, const struct config *cfg)
 			  "\n"
 			  "# Audio\n"
 #if defined (PREFIX)
-			  "#audio_path\t\t" PREFIX "/share/baresip\n"
+
+           //**********OLA----add by sxh 
+			  "audio_path\t\t" "/data/baresip\n"
+           //**********OLA----end add 
+	//		  "#audio_path\t\t" PREFIX "/share/baresip\n"
 #else
-			  "#audio_path\t\t/usr/share/baresip\n"
+//			  "#audio_path\t\t/usr/share/baresip\n"
+//*************OLA----add by sxh
+			  "audio_path\t\t" "/data/baresip\n"
+              //****OLA---end add
 #endif
 			  "audio_player\t\t%s\n"
 			  "audio_source\t\t%s\n"
@@ -695,11 +702,12 @@ int config_write_template(const char *file, const struct config *cfg)
 			 "------------------------------------------\n"
 			 "# Modules\n"
 			 "\n");
-
+/*
 	modpath = detect_module_path(&modpath_valid);
 	(void)re_fprintf(f, "%smodule_path\t\t%s\n",
 			 modpath_valid ? "" : "#", modpath);
-
+*/
+	(void)re_fprintf(f, "module_path\t\t\t" MOD_PRE "/data/baresip" "\n");
 	(void)re_fprintf(f, "\n# UI Modules\n");
 #if defined (WIN32)
 	(void)re_fprintf(f, "module\t\t\t" MOD_PRE "wincons" MOD_EXT "\n");

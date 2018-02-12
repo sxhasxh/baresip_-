@@ -1375,8 +1375,8 @@ int ua_init(const char *software, bool udp, bool tcp, bool tls,
 			      sub_handler, NULL);
 	if (err)
 		goto out;
-
-	net_change(net, 60, net_change_handler, NULL);
+//设置一个3秒的定时器来定时的检查网络地址是否发生变化
+	net_change(net, 3, net_change_handler, NULL);
 
  out:
 	if (err) {

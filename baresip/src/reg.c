@@ -97,12 +97,12 @@ static void register_handler(int err, const struct sip_msg *msg, void *arg)
 {
 	struct reg *reg = arg;
 	const struct sip_hdr *hdr;
-
+//注册失败
 	if (err) {
 		warning("reg: %s: Register: %m\n", ua_aor(reg->ua), err);
 
 		reg->scode = 999;
-
+        ua_printf(reg->ua,"ola_regist_err \n");
 		ua_event(reg->ua, UA_EVENT_REGISTER_FAIL, NULL, "%m", err);
 		return;
 	}
@@ -112,7 +112,7 @@ static void register_handler(int err, const struct sip_msg *msg, void *arg)
 		reg->srv = mem_deref(reg->srv);
 		(void)pl_strdup(&reg->srv, &hdr->val);
 	}
-
+//注册成功
 	if (200 <= msg->scode && msg->scode <= 299) {
 
 		uint32_t n_bindings;
@@ -121,6 +121,7 @@ static void register_handler(int err, const struct sip_msg *msg, void *arg)
 		reg->af    = sipmsg_af(msg);
 
 		if (msg->scode != reg->scode) {
+        ua_printf(reg->ua,"ola_regist_ok \n");
 			ua_printf(reg->ua, "{%d/%s/%s} %u %r (%s)"
 				  " [%u binding%s]\n",
 				  reg->id, sip_transp_name(msg->tp),
@@ -147,11 +148,12 @@ static void register_handler(int err, const struct sip_msg *msg, void *arg)
 		ua_event(reg->ua, UA_EVENT_REGISTER_OK, NULL, "%u %r",
 			 msg->scode, &msg->reason);
 	}
-	else if (msg->scode >= 300) {
+	else if (msg->scode >= 300) { //注册失败
 
 		warning("reg: %s: %u %r (%s)\n", ua_aor(reg->ua),
 			msg->scode, &msg->reason, reg->srv);
 
+        ua_printf(reg->ua,"ola_regist_err2 \n");
 		reg->scode = msg->scode;
 
 		ua_event(reg->ua, UA_EVENT_REGISTER_FAIL, NULL, "%u %r",
@@ -190,6 +192,8 @@ int reg_register(struct reg *reg, const char *reg_uri, const char *params,
 		return EINVAL;
 
 	reg->scode = 0;
+
+    ua_printf(reg->ua,"ola_regist_zzz \n");
 	routev[0] = outbound;
 
 	reg->sipreg = mem_deref(reg->sipreg);
@@ -216,6 +220,7 @@ void reg_unregister(struct reg *reg)
 		return;
 
 	reg->scode = 0;
+    ua_printf(reg->ua,"ola_unregist_zzz \n");
 	reg->af    = 0;
 
 	reg->sipreg = mem_deref(reg->sipreg);

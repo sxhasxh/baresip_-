@@ -248,9 +248,7 @@ endif
 endif
 ifeq ($(OS),linux)
 USE_EVDEV := $(shell [ -f $(SYSROOT)/include/linux/input.h ] && echo "yes")
-#****OLA add '#' by sxh
-#MODULES   += dtmfio
-#****OLA end
+MODULES   += dtmfio
 endif
 ifeq ($(OS),win32)
 USE_WINWAVE := yes
@@ -272,18 +270,9 @@ endif
 # ------------------------------------------------------------------------- #
 
 MODULES   += $(EXTRA_MODULES)
-#****OLA add '#' by sxh
-#MODULES   += stun turn ice natbd auloop presence
-MODULES   += stun turn ice  auloop 
-#****OLA end
-#****OLA add '#' by sxh
-#MODULES   += menu contact vumeter mwi account natpmp httpd
-MODULES   += menu contact  account vumeter
-#****OLA end
-
-#****OLA add '#' by sxh
-#MODULES   += srtp
-#****OLA end
+MODULES   += stun turn ice natbd auloop presence
+MODULES   += menu contact vumeter mwi account natpmp httpd
+MODULES   += srtp
 MODULES   += uuid
 MODULES   += debug_cmd
 
@@ -292,19 +281,12 @@ MODULES   += mqtt
 endif
 
 ifneq ($(HAVE_PTHREAD),)
-#****OLA add '#' by sxh
-#MODULES   += aubridge aufile
-#****OLA end
+MODULES   += aubridge aufile
 endif
 ifneq ($(USE_VIDEO),)
-#****OLA add '#' by sxh
-#MODULES   += vidloop selfview vidbridge
-#****OLA end
-MODULES   += vidloop 
+MODULES   += vidloop selfview vidbridge
 ifneq ($(HAVE_PTHREAD),)
-#****OLA add '#' by sxh
-#MODULES   += fakevideo
-#****OLA end
+MODULES   += fakevideo
 endif
 endif
 
@@ -341,26 +323,20 @@ MODULES   += rst
 endif
 endif
 ifneq ($(USE_CONS),)
-#****OLA add '#' by sxh
-#MODULES   += cons
-#****OLA end
+MODULES   += cons
 endif
 ifneq ($(USE_COREAUDIO),)
 MODULES   += coreaudio
 endif
 ifneq ($(USE_DTLS_SRTP),)
-#****OLA add '#' by sxh
-#MODULES   += dtls_srtp
-#****OLA end
+MODULES   += dtls_srtp
 endif
 ifneq ($(USE_QTCAPTURE),)
 MODULES   += qtcapture
 CFLAGS    += -DQTCAPTURE_RUNLOOP
 endif
 ifneq ($(USE_EVDEV),)
-#****OLA add '#' by sxh
-#MODULES   += evdev
-#****OLA end
+MODULES   += evdev
 endif
 ifneq ($(USE_G711),)
 MODULES   += g711
@@ -405,9 +381,7 @@ ifneq ($(USE_JACK),)
 MODULES   += jack
 endif
 ifneq ($(USE_L16),)
-#****OLA add '#' by sxh
-#MODULES   += l16
-#****OLA end
+MODULES   += l16
 endif
 ifneq ($(USE_OPENGL),)
 MODULES   += opengl
@@ -459,22 +433,19 @@ ifneq ($(USE_STDIO),)
 MODULES   += stdio
 endif
 
-#OLA*******add by songxiuhe
+#*******add by songxiuhe
 MODULES   += local_socket
-#OLA#*******end add
+#*******end add
 
 ifneq ($(USE_SYSLOG),)
-#****OLA add '#' by sxh
-#MODULES   += syslog
-#****OLA end
+MODULES   += syslog
 endif
 ifneq ($(USE_V4L),)
 MODULES   += v4l
 endif
-
-#****OLA add '#' by sxh
-#MODULES   += v4l2 v4l2_codec
-#****OLA end
+ifneq ($(USE_V4L2),)
+MODULES   += v4l2 v4l2_codec
+endif
 ifneq ($(USE_OMX_RPI),)
 MODULES   += omx
 endif
